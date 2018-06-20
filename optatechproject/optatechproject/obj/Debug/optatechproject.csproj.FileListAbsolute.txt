@@ -1,0 +1,8 @@
+C:\Users\Jesper\Documents\GitHub\opta-tech-project\optatechproject\optatechproject\bin\Debug\optatechproject.exe.config
+C:\Users\Jesper\Documents\GitHub\opta-tech-project\optatechproject\optatechproject\bin\Debug\optatechproject.exe
+C:\Users\Jesper\Documents\GitHub\opta-tech-project\optatechproject\optatechproject\bin\Debug\optatechproject.pdb
+C:\Users\Jesper\Documents\GitHub\opta-tech-project\optatechproject\optatechproject\obj\Debug\optatechproject.csprojAssemblyReference.cache
+C:\Users\Jesper\Documents\GitHub\opta-tech-project\optatechproject\optatechproject\obj\Debug\optatechproject.csproj.CoreCompileInputs.cache
+C:\Users\Jesper\Documents\GitHub\opta-tech-project\optatechproject\optatechproject\obj\Debug\optatechproject.exe
+C:\Users\Jesper\Documents\GitHub\opta-tech-project\optatechproject\optatechproject\obj\Debug\optatechproject.pdb
+C:\Users\Jesper\Documents\GitHub\opta-tech-project\optatechproject\optatechproject\obj\Debug\optatechproject.csproj.ResolveComReference.cache
