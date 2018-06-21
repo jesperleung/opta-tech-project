@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{D9EC9434-5585-4BB4-B10C-3F8C5F8BFFBD}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>optatechproject</RootNamespace>
-    <AssemblyName>optatechproject</AssemblyName>
+    <RootNamespace>OptaTechProject</RootNamespace>
+    <AssemblyName>OptaTechProject</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
