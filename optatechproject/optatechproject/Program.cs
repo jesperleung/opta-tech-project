@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.IO;
-// using Excel = Microsoft.Office.Interop.Excel;
+using Excel = Microsoft.Office.Interop.Excel;
 using System.Runtime.InteropServices;
 using Microsoft.VisualBasic.FileIO;
 using System.Text.RegularExpressions;
@@ -20,9 +20,6 @@ namespace OptaTechProject
 {
     public class OptaTechProject
     {
-        private static List<string> cities;
-        private static List<string> provinces;
-
         //creates SQL connection string and tries to connect to the SQL Server on localhost called SQLEXPRESS
         public static void ConnectToDB()
         {
@@ -44,85 +41,101 @@ namespace OptaTechProject
             }
         }
 
-        //public static void LoadRawData(string filename)
-        //{
-        //    Excel.Application xlApp = new Excel.Application();
-        //    Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(@"./" + filename);
-        //    Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
-        //    Excel.Range xlRange = xlWorksheet.UsedRange;
-
-        //    int rowCount = xlRange.Rows.Count;
-        //    int colCount = xlRange.Columns.Count;
-
-        //    for (int i = 1; i <= rowCount; i++)
-        //    {
-        //        for (int j = 1; j <= colCount; j++)
-        //        {
-        //            //new line
-        //            if (j == 1)
-        //                Console.Write("\r\n");
-
-        //            //write the value to the console
-        //            if (xlRange.Cells[i, j] != null && xlRange.Cells[i, j].Value2 != null)
-        //                Console.Write(xlRange.Cells[i, j].Value2.ToString() + "\t");
-
-        //            //add useful things here!   
-        //        }
-        //    }
-
-        //    //cleanup
-        //    GC.Collect();
-        //    GC.WaitForPendingFinalizers();
-
-        //    //rule of thumb for releasing com objects:
-        //    //  never use two dots, all COM objects must be referenced and released individually
-        //    //  ex: [somthing].[something].[something] is bad
-
-        //    //release com objects to fully kill excel process from running in the background
-        //    Marshal.ReleaseComObject(xlRange);
-        //    Marshal.ReleaseComObject(xlWorksheet);
-
-        //    //close and release
-        //    xlWorkbook.Close();
-        //    Marshal.ReleaseComObject(xlWorkbook);
-
-        //    //quit and release
-        //    xlApp.Quit();
-        //    Marshal.ReleaseComObject(xlApp);
-
-        //}
-
-        // load and read CSV file with provided filename ***FILE MUST BE IN ROOT FOLDER OF PROJECT****
-        public static void LoadCSV(string filename)
+        /*
+         * load and read XSL file with provided filename ***FILE MUST BE IN ROOT FOLDER OF PROJECT***
+         * code adapted from https://coderwall.com/p/app3ya/read-excel-file-in-c
+         */
+        public static void LoadXSL(string filename, List<string> cities, List<string> provinces)
         {
             try
             {
-                // getting data file from root folder of project and provided filename
-                using (TextFieldParser parser = new TextFieldParser(@"..\..\..\..\" + filename))
+                // Creating Excel objects
+                Excel.Application xlApp = new Excel.Application();
+                filename = Path.GetFullPath("@..\\..\\..\\..\\..\\..\\" + filename);
+                Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(filename);
+                Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
+                Excel.Range xlRange = xlWorksheet.UsedRange;
+
+                int rowCount = xlRange.Rows.Count;
+                //Console.WriteLine("row count: " + rowCount);
+                int colCount = xlRange.Columns.Count;
+                //Console.WriteLine("column count: " + colCount);
+
+                string raw;
+
+                //iterate over the rows and columns and print to the console as it appears in the file
+                for (int i = 1; i <= rowCount; i++)
                 {
-                    // telling parser to read a CSV
-                    parser.TextFieldType = FieldType.Delimited;
-                    parser.SetDelimiters(",");
-                    while (!parser.EndOfData)
+                    for (int j = 1; j <= colCount; j++)
                     {
-                        // read through every line in CSV file
-                        string[] fields = parser.ReadFields();
-                        foreach (string field in fields)
+                        //write the value to the console
+                        if (xlRange.Cells[i, j] != null && xlRange.Cells[i, j].Value != null)
                         {
-                            // replace any non-alphanumeric and non-space characters with a space
-                            string clean = Regex.Replace(field, "[^A-Za-z0-9 ]", " ");
-                            ParseAddress(clean);
-                            //Console.WriteLine(clean);
+                            raw = xlRange.Cells[i, j].Value;
+                            ParseAddress(raw, cities, provinces);
                         }
+
                     }
                 }
+
+                //cleanup
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                //rule of thumb for releasing com objects:
+                //  never use two dots, all COM objects must be referenced and released individually
+                //  ex: [somthing].[something].[something] is bad
+
+                //release com objects to fully kill excel process from running in the background
+                Marshal.ReleaseComObject(xlRange);
+                Marshal.ReleaseComObject(xlWorksheet);
+
+                //close and release
+                xlWorkbook.Close();
+                Marshal.ReleaseComObject(xlWorkbook);
+
+                //quit and release
+                xlApp.Quit();
+                Marshal.ReleaseComObject(xlApp);
             }
             catch (Exception e)
             {
-                // if error, print error to console
                 Console.WriteLine(e.ToString());
             }
         }
+
+        // load and read CSV file with provided filename ***FILE MUST BE IN ROOT FOLDER OF PROJECT****
+        //public static void LoadCSV(string filename)
+        //{
+        //    try
+        //    {
+        //        // getting data file from root folder of project and provided filename
+        //        using (TextFieldParser parser = new TextFieldParser(@"..\..\..\..\" + filename))
+        //        {
+        //            // telling parser to read a CSV
+        //            parser.TextFieldType = FieldType.Delimited;
+        //            parser.SetDelimiters(",");
+        //            while (!parser.EndOfData)
+        //            {
+        //                // read through every line in CSV file
+        //                string[] fields = parser.ReadFields();
+        //                foreach (string field in fields)
+        //                {
+        //                    // replace any non-alphanumeric and non-space characters with a space
+        //                    string clean = Regex.Replace(field, "[^A-Za-z0-9 ]", " ");
+        //                    ParseAddress(clean);
+        //                    //Console.WriteLine(clean);
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        // if error, print error to console
+        //        Console.WriteLine(e.ToString());
+        //    }
+        //}
+
         // loads list of Canadian cities from csv file into a List and returns it
         public static List<string> LoadCities()
         {
@@ -182,7 +195,7 @@ namespace OptaTechProject
             return provinces;
         }
         // parses raw string into its parts
-        public static void ParseAddress(string raw)
+        public static void ParseAddress(string raw, List<string> cities, List<string> provinces)
         {
             // initialize counter to be used to ensure all elements are gathered from raw string
             int counter;
@@ -191,37 +204,50 @@ namespace OptaTechProject
             string[] split = Regex.Split(raw, @"\s+");
             // convert array of substrings into List
             List<string> converted = new List<string>(split);
-
-            // for each element in split string
-            foreach (string s in split)
+            // remove last element in List since Regex.Split keeps an extra entry at the end of the List that's null
+            if (string.IsNullOrWhiteSpace(converted.ElementAt(converted.Count - 1)))
             {
-                // reset counter to 0 for every iteration
-                counter = 0;
-                // check if current substring exists in list of provinces
-                if (provinces.Contains(s))
+                converted.RemoveAt(converted.Count - 1);
+            }
+
+            // reset counter to 0 for every iteration
+            counter = 0;
+            Console.WriteLine("Before: "+converted.Count);
+            // for each element in split string
+            foreach (var s in converted.ToList())
+            {
+                Console.WriteLine(s);
+                if (Regex.IsMatch(s, @"\w\d\w\d\w\d"))
                 {
-                    Console.WriteLine("provinces exists");
-                    counter++;
-                }
-                // check if current substring exists in list of cities
-                else if (cities.Contains(s))
-                {
-                    Console.WriteLine("city exists");
-                    counter++;
-                }
-                // check if current substring is of the postal code format ex. A1A1A1
-                else if (Regex.IsMatch(s, @"\w\d\w\d\w\d"))
-                {
-                    Console.WriteLine("postal code exists");
+                    converted.Remove(s);
+                    //Console.WriteLine("postal code exists: " + s);
                     counter++;
                 }
                 // check if current substring is all numeric (street numbers are all numeric)
                 else if (IsNumeric(s))
                 {
-                    Console.WriteLine("street number exists");
+                    converted.Remove(s);
+                    //Console.WriteLine("street number exists: " + s);
                     counter++;
                 }
+                else if (provinces.Contains(s, StringComparer.OrdinalIgnoreCase))
+                {
+                    converted.Remove(s);
+                    //Console.WriteLine("provinces exists:" + s);
+                    counter++;
+                }
+                Console.WriteLine("After: "+converted.Count);
             }
+
+            // check if current substring exists in list of cities
+            if (cities.Contains(raw, StringComparer.OrdinalIgnoreCase))
+            {
+                Console.WriteLine("city exists: ");
+                counter++;
+            }
+            // check if current substring is of the postal code format ex. A1A1A1
+
+
         }
         // iterates through a string to check if each character is a number
         public static bool IsNumeric(string str)
@@ -248,9 +274,9 @@ namespace OptaTechProject
 
             Console.Write("Please type the filename of the input data file: ");
             string inputfilename = Console.ReadLine();
-            Console.WriteLine(inputfilename);
+            // Console.WriteLine(inputfilename);
 
-            LoadCSV(inputfilename);
+            LoadXSL(inputfilename, cities, provinces);
 
             // connect to database
             //ConnectToDB();
