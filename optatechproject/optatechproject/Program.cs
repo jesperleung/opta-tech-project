@@ -45,7 +45,7 @@ namespace OptaTechProject
          * load and read XSL file with provided filename ***FILE MUST BE IN ROOT FOLDER OF PROJECT***
          * code adapted from https://coderwall.com/p/app3ya/read-excel-file-in-c
          */
-        public static void LoadXSL(string filename, List<string> cities, List<string> provinces)
+        public static void LoadXSL(string filename, List<string> cities, List<string> provinces, List<string> suffixes)
         {
             try
             {
@@ -105,49 +105,14 @@ namespace OptaTechProject
         }
 
         // load and read CSV file with provided filename ***FILE MUST BE IN ROOT FOLDER OF PROJECT****
-        //public static void LoadCSV(string filename)
-        //{
-        //    try
-        //    {
-        //        // getting data file from root folder of project and provided filename
-        //        using (TextFieldParser parser = new TextFieldParser(@"..\..\..\..\" + filename))
-        //        {
-        //            // telling parser to read a CSV
-        //            parser.TextFieldType = FieldType.Delimited;
-        //            parser.SetDelimiters(",");
-        //            while (!parser.EndOfData)
-        //            {
-        //                // read through every line in CSV file
-        //                string[] fields = parser.ReadFields();
-        //                foreach (string field in fields)
-        //                {
-        //                    // replace any non-alphanumeric and non-space characters with a space
-        //                    string clean = Regex.Replace(field, "[^A-Za-z0-9 ]", " ");
-        //                    ParseAddress(clean);
-        //                    //Console.WriteLine(clean);
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        // if error, print error to console
-        //        Console.WriteLine(e.ToString());
-        //    }
-        //}
-
-        // loads list of Canadian cities from csv file into a List and returns it
-        public static List<string> LoadCities()
+        public static List<string> LoadCSV(string filename)
         {
-            // initialize List for cities
-            List<string> cities = new List<string>();
-
+            List<string> loaded = new List<string>();
             try
             {
                 // getting data file from root folder of project and provided filename
-                using (TextFieldParser parser = new TextFieldParser(@"..\..\..\..\places.csv"))
+                using (TextFieldParser parser = new TextFieldParser(@"..\..\..\..\" + filename))
                 {
-                    Console.WriteLine("loading cities data...");
                     // telling parser to read a CSV
                     parser.TextFieldType = FieldType.Delimited;
                     parser.SetDelimiters(",");
@@ -157,18 +122,25 @@ namespace OptaTechProject
                         string[] fields = parser.ReadFields();
                         foreach (string field in fields)
                         {
-                            // add city name to List
-                            cities.Add(field);
+                            loaded.Add(field);
                         }
                     }
                 }
-                Console.WriteLine("** done loading cities **");
             }
             catch (Exception e)
             {
                 // if error, print error to console
                 Console.WriteLine(e.ToString());
             }
+            return loaded;
+        }
+        // loads list of Canadian cities from csv file into a List and returns it
+        public static List<string> LoadCities()
+        {
+            // initialize List for cities
+            List<string> cities = new List<string>();
+
+            cities = LoadCSV("places.csv");
 
             return cities;
         }
@@ -194,6 +166,16 @@ namespace OptaTechProject
 
             return provinces;
         }
+        // loads list of street suffixes into a List and returns it
+        public static List<string> LoadSuffixes()
+        {
+            List<string> suffixes = new List<string>();
+
+            suffixes = LoadCSV("street suffixes.csv");
+
+            return suffixes;
+        }
+        
         // parses raw string into its parts
         public static void ParseAddress(string raw, List<string> cities, List<string> provinces)
         {
@@ -352,12 +334,15 @@ namespace OptaTechProject
             // loading provinces into list for lookup
             List<string> provinces = new List<string>();
             provinces = LoadProvinces();
+            // loading street suffixes into list for lookup
+            List<string> suffixes = new List<string>();
+            suffixes = LoadSuffixes();
 
             Console.Write("Please type the filename of the input data file: ");
             string inputfilename = Console.ReadLine();
             // Console.WriteLine(inputfilename);
 
-            LoadXSL(inputfilename, cities, provinces);
+            LoadXSL(inputfilename, cities, provinces, suffixes);
 
             // connect to database
             //ConnectToDB();
