@@ -199,26 +199,33 @@ namespace OptaTechProject
         {
             // initialize counter to be used to ensure all elements are gathered from raw string
             int counter;
-
+            // variables to store address components
+            string streetnum;
+            string streetname;
+            string city;
+            string province;
+            string postalcode;
+            // used for checking for all substrings in street + city combination
+            string substring;
+            // replace anything that isn't alphanumeric or a symbol that could be used with " "
+            raw = Regex.Replace(raw, @"[!@#$%^&*()_+=\[{\]};:<>|/?,\\""]", " ");
             // split raw string into parts about the spaces
             string[] split = Regex.Split(raw, @"\s+");
             // convert array of substrings into List
             List<string> converted = new List<string>(split);
-            // remove last element in List since Regex.Split keeps an extra entry at the end of the List that's null
-            if (string.IsNullOrWhiteSpace(converted.ElementAt(converted.Count - 1)))
-            {
-                converted.RemoveAt(converted.Count - 1);
-            }
 
             // reset counter to 0 for every iteration
             counter = 0;
-            Console.WriteLine("Before: "+converted.Count);
+            //Console.WriteLine("Before: "+converted.Count);
             // for each element in split string
             foreach (var s in converted.ToList())
             {
-                Console.WriteLine(s);
+                // check if current substring is of the postal code format ex. A1A1A1
+                //Console.WriteLine(s);
                 if (Regex.IsMatch(s, @"\w\d\w\d\w\d"))
                 {
+                    // save postal code
+                    postalcode = s;
                     converted.Remove(s);
                     //Console.WriteLine("postal code exists: " + s);
                     counter++;
@@ -226,26 +233,71 @@ namespace OptaTechProject
                 // check if current substring is all numeric (street numbers are all numeric)
                 else if (IsNumeric(s))
                 {
+                    // save street number
+                    streetnum = s;
                     converted.Remove(s);
                     //Console.WriteLine("street number exists: " + s);
                     counter++;
                 }
+                // check if current substring exists in List of provinces
                 else if (provinces.Contains(s, StringComparer.OrdinalIgnoreCase))
                 {
+                    // save province
+                    province = s;
                     converted.Remove(s);
                     //Console.WriteLine("provinces exists:" + s);
                     counter++;
                 }
-                Console.WriteLine("After: "+converted.Count);
+                // remove any whitespace, null, empty entries from list
+                else if (string.IsNullOrWhiteSpace(s))
+                {
+                    converted.Remove(s);
+                }
+                //Console.WriteLine("After: "+converted.Count);
+            }
+            // if all have been accounted for so far (street #, province, postal code)
+            if (counter >= 3)
+            {
+                // TODO: can't search for city since streets can have city names, remove all code about loading in cities
+                // combine street name and city name into one string again
+                raw = String.Join(" ", converted.ToArray());
+                Console.WriteLine("Street name and city: " + raw);
+                
+                // get all substrings of remaining text to find city name
+                for (int i = 0; i < raw.Length; i++)
+                {
+                    for (int j = i; j < raw.Length; j++)
+                    {
+                        substring = raw.Substring(i, j - i + 1);
+                        if (cities.Contains(substring, StringComparer.OrdinalIgnoreCase))
+                        {
+                            Console.WriteLine("city exists: "+substring);
+                            city = substring;
+                            break;
+                        }
+                        
+                    }
+                }
+            }
+            // not enough elements matched, need user input ***SHOULDN'T HAPPEN OFTEN***
+            else
+            {
+                Console.WriteLine("Address could not be parsed properly, user input required");
+                Console.WriteLine(raw);
+                Console.WriteLine("What is the street number?");
+                streetnum = Console.ReadLine();
+                Console.WriteLine("What is the street name?");
+                streetname = Console.ReadLine();
+                Console.WriteLine("What is the city?");
+                city = Console.ReadLine();
+                Console.WriteLine("What is the province?");
+                province = Console.ReadLine();
+                Console.WriteLine("What is the postal code?");
+                postalcode = Console.ReadLine();
+
             }
 
-            // check if current substring exists in list of cities
-            if (cities.Contains(raw, StringComparer.OrdinalIgnoreCase))
-            {
-                Console.WriteLine("city exists: ");
-                counter++;
-            }
-            // check if current substring is of the postal code format ex. A1A1A1
+
 
 
         }
