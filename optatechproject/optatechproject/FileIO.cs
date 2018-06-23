@@ -214,8 +214,59 @@ namespace OptaTechProject
                     {
                         // i = index of street suffix
                         i = converted.IndexOf(x);
+                        // CASE 1: street suffix is 2nd element in string, so 1st element of the string must be the street name (could be false positive for street suffix)
+                        if (i == 1 && !cityfound)
+                        {
+                            // 1st element of the string is the street name
+                            streetname = String.Join(" ", converted.ToArray(), 0, 1);
+
+                            // get all substrings of remaining text to find city name IN ORDER ex. A, AB, ABC, BC, C
+                            // code adapted from https://www.dotnetperls.com/all-substrings
+                            for (int length = 1 ; length < converted.Count; length++)
+                            {
+                                if (cityfound)
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    for (int start = 2; start <= converted.Count - length; start++)
+                                    {
+                                        // get substrings of words in remaining text
+                                        substring = String.Join(" ", converted.ToArray(), start, length);
+
+                                        Console.WriteLine("CASE 1: after street suffix: " + substring);
+                                        // if substring is name of a city
+                                        if (cities.Contains(substring, StringComparer.OrdinalIgnoreCase))
+                                        {
+                                            // save city name
+                                            Console.WriteLine("city found: " + substring);
+                                            city = substring;
+                                            cityfound = true;
+
+                                            
+                                            // city is at the start of the string
+                                            if (start == 0)
+                                            {
+                                                // get everything after the city name as streetnum
+                                                streetnum = String.Join(" ", split, length, split.Length - length);
+                                            }
+                                            // city ends at the end of the string
+                                            else
+                                            {
+                                                // get everything before the city name as streetnum
+                                                streetnum = String.Join(" ", split, 0, start);
+                                            }
+                                            Console.WriteLine("street name: " + streetname);
+                                            // stop the for loop once city has been found
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         // CASE 1: street suffix is in the middle of the string
-                        if (i < converted.Count - 1 && !cityfound)
+                        else if (i < converted.Count - 1 && !cityfound)
                         {
                             // everything after the street suffix
                             substring = String.Join(" ", converted.ToArray(), i + 1, converted.Count - i - 1);
@@ -351,6 +402,6 @@ namespace OptaTechProject
                 postalcode = Console.ReadLine();
 
             }
-        }
+}
     }
 }
