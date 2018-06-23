@@ -161,6 +161,9 @@ namespace OptaTechProject
             // used for checking for all substrings in street + city combination
             string substring;
             Boolean cityfound = false;
+            // pointers to use for finding street and city names
+            int i;
+            int j;
             // replace anything that isn't alphanumeric or a symbol that could be used with " "
             raw = Regex.Replace(raw, @"[!@#$%^&*()_+=\[{\]};:<>|/?,\\""]", " ");
             // split raw string into parts about the spaces
@@ -203,14 +206,73 @@ namespace OptaTechProject
             // if all have been accounted for so far (province, postal code)
             if (counter >= 2)
             {
-                // combine street name and city name into one string again
-                split = converted.ToArray();
                 Console.WriteLine("Street # Street name and city: " + String.Join(" ", split));
-                foreach (var x in split)
+                foreach (var x in converted)
                 {
                     if (suffixes.Contains(x, StringComparer.OrdinalIgnoreCase))
                     {
-                        // TODO find street suffix and find street name / city name around it
+                        // i = index of street suffix
+                        i = converted.IndexOf(x);
+                        // CASE 1: street suffix is in the middle of the string
+                        if (i < converted.Count && !cityfound)
+                        {
+                            // everything after the street suffix
+                            substring = String.Join(" ", converted.ToArray(), i + 1, converted.Count - i - 1);
+
+                            // check if everything after the potential street ending is a city
+                            if (cities.Contains(substring, StringComparer.OrdinalIgnoreCase))
+                            {
+                                city = substring;
+                                cityfound = true;
+                                Console.WriteLine(city);
+                            }
+                        // CASE 2: street suffix is at the end of the string
+                        }else if (i == converted.Count && !cityfound)
+                        {
+                            // need to find street number in remaining string
+                            foreach (var y in converted)
+                            {
+                                // y could be the street number
+                                if (Utils.IsNumeric(y))
+                                {
+                                    // j = index of street number
+                                    j = converted.IndexOf(y);
+                                    // street number is at the beginning of the string
+                                    if (j == 0)
+                                    {
+                                        // need to find location of city to split string again
+                                    // street number is in the middle of the string
+                                    }else if (j < i)
+                                    {
+                                        // city name is either before or after j
+                                        // check from 0 to j for city
+                                        if (cities.Contains(String.Join(" ", converted.ToArray(), 0, j)))
+                                        {
+
+                                        // check from j to end for city
+                                        }else if (cities.Contains(String.Join(" ", converted.ToArray(), j, i - j)))
+                                        {
+
+                                        }
+                                    }
+                                    // street number is in the middle of the string
+                                    substring = String.Join(" ", converted.ToArray(), j + 1);
+                                }
+                            }
+                            // everything before the street suffix
+                            substring = String.Join(" ", converted.ToArray(), 0, i - 1);
+
+                            
+                    }
+                    // city can't be found, need user input ***SHOULDN'T HAPPEN OFTEN***
+                    else if (!cityfound)
+                    {
+                        Console.WriteLine("Address could not be parsed properly, user input required");
+                        Console.WriteLine(String.Join(" ", split));
+                        Console.WriteLine("What is the street name?");
+                        streetname = Console.ReadLine();
+                        Console.WriteLine("What is the city?");
+                        city = Console.ReadLine();
                     }
                 }
                 // get all substrings of remaining text to find city name IN ORDER ex. A, AB, ABC, BC, C
