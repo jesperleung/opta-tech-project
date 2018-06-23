@@ -203,18 +203,19 @@ namespace OptaTechProject
                 }
                 //Console.WriteLine("After: "+converted.Count);
             }
-            // if all have been accounted for so far (province, postal code)
+            // if province and postal code have been accounted for so far
             if (counter >= 2)
             {
                 Console.WriteLine("Street # Street name and city: " + String.Join(" ", split));
                 foreach (var x in converted)
                 {
+                    // street suffix has been found
                     if (suffixes.Contains(x, StringComparer.OrdinalIgnoreCase))
                     {
                         // i = index of street suffix
                         i = converted.IndexOf(x);
                         // CASE 1: street suffix is in the middle of the string
-                        if (i < converted.Count && !cityfound)
+                        if (i < converted.Count - 1 && !cityfound)
                         {
                             // everything after the street suffix
                             substring = String.Join(" ", converted.ToArray(), i + 1, converted.Count - i - 1);
@@ -226,8 +227,9 @@ namespace OptaTechProject
                                 cityfound = true;
                                 Console.WriteLine(city);
                             }
+                        }
                         // CASE 2: street suffix is at the end of the string
-                        }else if (i == converted.Count && !cityfound)
+                        else if (i == converted.Count - 1 && !cityfound)
                         {
                             // need to find street number in remaining string
                             foreach (var y in converted)
@@ -240,18 +242,28 @@ namespace OptaTechProject
                                     // street number is at the beginning of the string
                                     if (j == 0)
                                     {
-                                        // need to find location of city to split string again
+                                        // find location of city to split string again
+                                        foreach (var z in converted)
+                                        {
+                                            // TODO 
+                                        }
+
+                                    }
                                     // street number is in the middle of the string
-                                    }else if (j < i)
+                                    else if (j < i)
                                     {
                                         // city name is either before or after j
                                         // check from 0 to j for city
-                                        if (cities.Contains(String.Join(" ", converted.ToArray(), 0, j)))
+                                        if (cities.Contains(String.Join(" ", converted.ToArray(), 0, j), StringComparer.OrdinalIgnoreCase))
                                         {
-
-                                        // check from j to end for city
-                                        }else if (cities.Contains(String.Join(" ", converted.ToArray(), j, i - j)))
+                                            city = String.Join(" ", converted.ToArray(), 0, j);
+                                            cityfound = true;
+                                            // check from j to end for city
+                                        }
+                                        else if (cities.Contains(String.Join(" ", converted.ToArray(), j, i - j), StringComparer.OrdinalIgnoreCase))
                                         {
+                                            city = String.Join(" ", converted.ToArray(), j, i - j);
+                                            cityfound = true;
 
                                         }
                                     }
@@ -262,64 +274,65 @@ namespace OptaTechProject
                             // everything before the street suffix
                             substring = String.Join(" ", converted.ToArray(), 0, i - 1);
 
-                            
+
+                        }
+                        // city can't be found, need user input ***SHOULDN'T HAPPEN OFTEN***
+                        else if (!cityfound)
+                        {
+                            Console.WriteLine("Address could not be parsed properly, user input required");
+                            Console.WriteLine(String.Join(" ", split));
+                            Console.WriteLine("What is the street name?");
+                            streetname = Console.ReadLine();
+                            Console.WriteLine("What is the city?");
+                            city = Console.ReadLine();
+                        }
                     }
-                    // city can't be found, need user input ***SHOULDN'T HAPPEN OFTEN***
-                    else if (!cityfound)
-                    {
-                        Console.WriteLine("Address could not be parsed properly, user input required");
-                        Console.WriteLine(String.Join(" ", split));
-                        Console.WriteLine("What is the street name?");
-                        streetname = Console.ReadLine();
-                        Console.WriteLine("What is the city?");
-                        city = Console.ReadLine();
-                    }
+                    // get all substrings of remaining text to find city name IN ORDER ex. A, AB, ABC, BC, C
+                    //for (int length = 1; length < split.Length; length++)
+                    //{
+                    //    for (int start = 0; start <= split.Length - length; start++)
+                    //    {
+                    //        // get substrings of words in remaining text
+                    //        substring = String.Join(" ", split, start, length);
+
+                    //        // Console.WriteLine(substring);
+                    //        // if substring is name of a city
+                    //        if (cities.Contains(substring, StringComparer.OrdinalIgnoreCase))
+                    //        {
+                    //            // save city name
+                    //            Console.WriteLine("city found: " + substring);
+                    //            city = substring;
+                    //            cityfound = true;
+
+                    //            // city is at the start of the string
+                    //            if (start == 0)
+                    //            {
+                    //                // get everything after the city name as streetname
+                    //                streetname = String.Join(" ", split, length, split.Length - length);
+                    //            }
+                    //            // city ends at the end of the string
+                    //            else
+                    //            {
+                    //                // get everything before the city name as streetname
+                    //                streetname = String.Join(" ", split, 0, start);
+                    //            }
+                    //            Console.WriteLine("street name: " + streetname);
+                    //            // stop the for loop once city has been found
+                    //            break;
+                    //        }
+                    //    }
+                    //}
+                    //// city couldn't be found in List, need user input ***SHOULDN'T HAPPEN OFTEN***
+                    //if (!cityfound)
+                    //{
+                    //    Console.WriteLine("Address could not be parsed properly, user input required");
+                    //    Console.WriteLine(String.Join(" ", split));
+                    //    Console.WriteLine("What is the street name?");
+                    //    streetname = Console.ReadLine();
+                    //    Console.WriteLine("What is the city?");
+                    //    city = Console.ReadLine();
+                    //}
                 }
-                // get all substrings of remaining text to find city name IN ORDER ex. A, AB, ABC, BC, C
-                //for (int length = 1; length < split.Length; length++)
-                //{
-                //    for (int start = 0; start <= split.Length - length; start++)
-                //    {
-                //        // get substrings of words in remaining text
-                //        substring = String.Join(" ", split, start, length);
-
-                //        // Console.WriteLine(substring);
-                //        // if substring is name of a city
-                //        if (cities.Contains(substring, StringComparer.OrdinalIgnoreCase))
-                //        {
-                //            // save city name
-                //            Console.WriteLine("city found: " + substring);
-                //            city = substring;
-                //            cityfound = true;
-
-                //            // city is at the start of the string
-                //            if (start == 0)
-                //            {
-                //                // get everything after the city name as streetname
-                //                streetname = String.Join(" ", split, length, split.Length - length);
-                //            }
-                //            // city ends at the end of the string
-                //            else
-                //            {
-                //                // get everything before the city name as streetname
-                //                streetname = String.Join(" ", split, 0, start);
-                //            }
-                //            Console.WriteLine("street name: " + streetname);
-                //            // stop the for loop once city has been found
-                //            break;
-                //        }
-                //    }
-                //}
-                //// city couldn't be found in List, need user input ***SHOULDN'T HAPPEN OFTEN***
-                //if (!cityfound)
-                //{
-                //    Console.WriteLine("Address could not be parsed properly, user input required");
-                //    Console.WriteLine(String.Join(" ", split));
-                //    Console.WriteLine("What is the street name?");
-                //    streetname = Console.ReadLine();
-                //    Console.WriteLine("What is the city?");
-                //    city = Console.ReadLine();
-                //}
             }
             // not enough elements matched, need user input ***SHOULDN'T HAPPEN OFTEN***
             else
