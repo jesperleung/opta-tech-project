@@ -21,5 +21,24 @@ namespace OptaTechProject
             // else return true
             return true;
         }
+        // gets all substrings and stores it in a list ex. ABC -> A, AB, ABC, BC, C
+        // code adapted from https://www.dotnetperls.com/all-substrings
+        public static List<string> AllSubstrings(string[] original)
+        {
+            List<string> substrings = new List<string>();
+            
+
+            // Avoid full length.
+            for (int length = 1; length <= original.Length; length++)
+            {
+                // End index is tricky.
+                for (int start = 0; start <= original.Length - length; start++)
+                {
+                    string substring = String.Join(" ", original, start, length);
+                    substrings.Add(substring);
+                }
+            }
+            return substrings;
+        }
     }
 }
