@@ -1,174 +1,174 @@
-ABBEY	Abbey 
-ACCESS	Access 
-ACRES	Acres 
-AIRE	Aire 
-ALLEY	Alley 
-ALLÉE	Allée 
-AUT	Autoroute 
-AV	Avenue 
-AVE	Avenue 
-BAY	Bay 
-BEACH	Beach 
-BEND	Bend 
-BLOC	Bloc 
-BLOCK	Block 
-BLVD	Boulevard 
-BOUL	Boulevard 
-BOURG	Bourg 
-BRGE	Barrage 
-BROOK	Brook 
-BYPASS	By-pass 
-BYWAY	Byway 
-C	Centre 
-CAMPUS	Campus 
-CAPE	Cape 
-CAR	Carré 
-CARREF	Carrefour 
-CDS	Cul-de-sac 
-CERCLE	Cercle 
-CH	Chemin 
-CHASE	Chase 
-CIR	Circle 
-CIRCT	Circuit 
-CLOSE	Close 
-COMMON	Common 
-CONC	Concession 
-CÔTE	Côte 
-COUR	Cour 
-COURS	Cours 
-COVE	Cove 
-CRES	Crescent 
-CREST	Crest 
-CRNRS	Corners 
-CROFT	Croft 
-CROIS	Croissant 
-CROSS	Crossing 
-CRSSRD	Crossroads 
-CRT	Court 
-CTR	Centre 
-DALE	Dale 
-DELL	Dell 
-DESSTE	Desserte 
-DIVERS	Diversion 
-DOWNS	Downs 
-DR	Drive 
-DRPASS	Droit de passage 
-ÉCH	Échangeur 
-END	End 
-ESPL	Esplanade 
-ESTATE	Estates 
-EXPY	Expressway 
-EXTEN	Extension 
-FARM	Farm 
-FIELD	Field 
-FOREST	Forest 
-FRONT	Front 
-FSR	Forest service road 
-FWY	Freeway 
-GATE	Gate 
-GDNS	Gardens 
-GLADE	Glade 
-GLEN	Glen 
-GREEN	Green 
-GRNDS	Grounds 
-GROVE	Grove 
-HARBR	Harbour 
-HAVEN	Haven 
-HEATH	Heath 
-HGHLDS	Highlands 
-HILL	Hill 
-HOLLOW	Hollow 
-HTS	Heights 
-HWY	Highway 
-ÎLE	Île 
-IMP	Impasse 
-INLET	Inlet 
-ISLAND	Island 
-KEY	Key 
-KNOLL	Knoll 
-LANDNG	Landing 
-LANE	Lane 
-LANEWY	Laneway 
-LINE	Line 
-LINK	Link 
-LKOUT	Lookout 
-LMTS	Limits 
-LOOP	Loop 
-MALL	Mall 
-MANOR	Manor 
-MAZE	Maze 
-MEADOW	Meadow 
-MEWS	Mews 
-MONTÉE	Montée 
-MOOR	Moor 
-MOUNT	Mount 
-MTN	Mountain 
-ORCH	Orchard 
-PARADE	Parade 
-PARC	Parc 
-PASS	Passage 
-PATH	Path 
-PEAK	Peak 
-PINES	Pines 
-PK	Park 
-PKY	Parkway 
-PL	Place 
-PLACE	Place 
-PLAT	Plateau 
-PLAZA	Plaza 
-POINTE	Pointe 
-PORT	Port 
-PROM	Promenade 
-PT	Point 
-PTWAY	Pathway 
-PVT	Private 
-QUAI	Quai 
-QUAY	Quay 
-RAMP	Ramp 
-RANG	Rang 
-RD	Road 
-RDPT	Rond point 
-REACH	Reach 
-RG	Range 
-RIDGE	Ridge 
-RISE	Rise 
-RLE	Ruelle 
-ROUTE	Route 
-ROW	Row 
-RTE	Route 
-RTOFWY	Right of way 
-RUE	Rue 
-RUIS	Ruisseau 
-RUN	Run 
-SECTN	Section 
-SENT	Sentier 
-SIDERD	Sideroad 
-SQ	Square 
-ST	Street 
-STROLL	Stroll 
-SUBDIV	Subdivision 
-TERR	Terrace 
-THICK	Thicket 
-TLINE	Townline 
-TOWERS	Towers 
-TRACE	Trace 
-TRAIL	Trail 
-TRNABT	Turnabout 
-TRUNK	Trunk 
-TSSE	Terrasse 
-VALE	Vale 
-VIA	Via 
-VIEW	View 
-VILLAS	Villas 
-VILLGE	Village 
-VISTA	Vista 
-VOIE	Voie 
-WALK	Walk 
-WAY	Way 
-WHARF	Wharf 
-WOOD	Wood 
-WYND	Wynd 
-N	
-S	
-E	
-W	
+ï»¿ABBEY,Abbey 
+ACCESS,Access 
+ACRES,Acres 
+AIRE,Aire 
+ALLEY,Alley 
+ALLÃ‰E,AllÃ©e 
+AUT,Autoroute 
+AV,Avenue 
+AVE,Avenue 
+BAY,Bay 
+BEACH,Beach 
+BEND,Bend 
+BLOC,Bloc 
+BLOCK,Block 
+BLVD,Boulevard 
+BOUL,Boulevard 
+BOURG,Bourg 
+BRGE,Barrage 
+BROOK,Brook 
+BYPASS,By-pass 
+BYWAY,Byway 
+C,Centre 
+CAMPUS,Campus 
+CAPE,Cape 
+CAR,CarrÃ© 
+CARREF,Carrefour 
+CDS,Cul-de-sac 
+CERCLE,Cercle 
+CH,Chemin 
+CHASE,Chase 
+CIR,Circle 
+CIRCT,Circuit 
+CLOSE,Close 
+COMMON,Common 
+CONC,Concession 
+CÃ”TE,CÃ´te 
+COUR,Cour 
+COURS,Cours 
+COVE,Cove 
+CRES,Crescent 
+CREST,Crest 
+CRNRS,Corners 
+CROFT,Croft 
+CROIS,Croissant 
+CROSS,Crossing 
+CRSSRD,Crossroads 
+CRT,Court 
+CTR,Centre 
+DALE,Dale 
+DELL,Dell 
+DESSTE,Desserte 
+DIVERS,Diversion 
+DOWNS,Downs 
+DR,Drive 
+DRPASS,Droit de passage 
+Ã‰CH,Ã‰changeur 
+END,End 
+ESPL,Esplanade 
+ESTATE,Estates 
+EXPY,Expressway 
+EXTEN,Extension 
+FARM,Farm 
+FIELD,Field 
+FOREST,Forest 
+FRONT,Front 
+FSR,Forest service road 
+FWY,Freeway 
+GATE,Gate 
+GDNS,Gardens 
+GLADE,Glade 
+GLEN,Glen 
+GREEN,Green 
+GRNDS,Grounds 
+GROVE,Grove 
+HARBR,Harbour 
+HAVEN,Haven 
+HEATH,Heath 
+HGHLDS,Highlands 
+HILL,Hill 
+HOLLOW,Hollow 
+HTS,Heights 
+HWY,Highway 
+ÃŽLE,ÃŽle 
+IMP,Impasse 
+INLET,Inlet 
+ISLAND,Island 
+KEY,Key 
+KNOLL,Knoll 
+LANDNG,Landing 
+LANE,Lane 
+LANEWY,Laneway 
+LINE,Line 
+LINK,Link 
+LKOUT,Lookout 
+LMTS,Limits 
+LOOP,Loop 
+MALL,Mall 
+MANOR,Manor 
+MAZE,Maze 
+MEADOW,Meadow 
+MEWS,Mews 
+MONTÃ‰E,MontÃ©e 
+MOOR,Moor 
+MOUNT,Mount 
+MTN,Mountain 
+ORCH,Orchard 
+PARADE,Parade 
+PARC,Parc 
+PASS,Passage 
+PATH,Path 
+PEAK,Peak 
+PINES,Pines 
+PK,Park 
+PKY,Parkway 
+PL,Place 
+PLACE,Place 
+PLAT,Plateau 
+PLAZA,Plaza 
+POINTE,Pointe 
+PORT,Port 
+PROM,Promenade 
+PT,Point 
+PTWAY,Pathway 
+PVT,Private 
+QUAI,Quai 
+QUAY,Quay 
+RAMP,Ramp 
+RANG,Rang 
+RD,Road 
+RDPT,Rond point 
+REACH,Reach 
+RG,Range 
+RIDGE,Ridge 
+RISE,Rise 
+RLE,Ruelle 
+ROUTE,Route 
+ROW,Row 
+RTE,Route 
+RTOFWY,Right of way 
+RUE,Rue 
+RUIS,Ruisseau 
+RUN,Run 
+SECTN,Section 
+SENT,Sentier 
+SIDERD,Sideroad 
+SQ,Square 
+ST,Street 
+STROLL,Stroll 
+SUBDIV,Subdivision 
+TERR,Terrace 
+THICK,Thicket 
+TLINE,Townline 
+TOWERS,Towers 
+TRACE,Trace 
+TRAIL,Trail 
+TRNABT,Turnabout 
+TRUNK,Trunk 
+TSSE,Terrasse 
+VALE,Vale 
+VIA,Via 
+VIEW,View 
+VILLAS,Villas 
+VILLGE,Village 
+VISTA,Vista 
+VOIE,Voie 
+WALK,Walk 
+WAY,Way 
+WHARF,Wharf 
+WOOD,Wood 
+WYND,Wynd 
+N,
+S,
+E,
+W,
