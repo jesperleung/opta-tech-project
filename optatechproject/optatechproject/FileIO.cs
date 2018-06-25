@@ -17,7 +17,7 @@ namespace OptaTechProject
         * load and read XSL file with provided filename ***FILE MUST BE IN ROOT FOLDER OF PROJECT***
         * code adapted from https://coderwall.com/p/app3ya/read-excel-file-in-c
         */
-        public static void LoadXLS(string filename, List<string> cities, List<string> provinces, List<string> suffixes)
+        public static void LoadXLS(string filename, HashSet<string> cities, HashSet<string> provinces, HashSet<string> suffixes, string conString)
         {
             try
             {
@@ -44,7 +44,8 @@ namespace OptaTechProject
                         if (xlRange.Cells[i, j] != null && xlRange.Cells[i, j].Value != null)
                         {
                             raw = xlRange.Cells[i, j].Value;
-                            ParseAddress(raw, cities, provinces, suffixes);
+                            DBIO.WriteRaw(conString, raw);
+                            ParseAddress(raw, cities, provinces, suffixes, conString);
                         }
 
                     }
@@ -77,9 +78,9 @@ namespace OptaTechProject
         }
 
         // load and read CSV file with provided filename ***FILE MUST BE IN ROOT FOLDER OF PROJECT****
-        public static List<string> LoadCSV(string filename)
+        public static HashSet<string> LoadCSV(string filename)
         {
-            List<string> loaded = new List<string>();
+            HashSet<string> loaded = new HashSet<string>();
             try
             {
                 // getting data file from root folder of project and provided filename
@@ -107,19 +108,19 @@ namespace OptaTechProject
             return loaded;
         }
         // loads list of Canadian cities from csv file into a List and returns it
-        public static List<string> LoadCities()
+        public static HashSet<string> LoadCities()
         {
             // initialize List for cities
-            List<string> cities = new List<string>();
+            HashSet<string> cities = new HashSet<string>();
 
-            cities = LoadCSV("places.csv");
+            cities = LoadCSV("cities.csv");
 
             return cities;
         }
         // loads list of Canadian provinces into a List and returns it
-        public static List<string> LoadProvinces()
+        public static HashSet<string> LoadProvinces()
         {
-            List<string> provinces = new List<string>
+            HashSet<string> provinces = new HashSet<string>
             {
                 "ON",
                 "QC",
@@ -139,16 +140,16 @@ namespace OptaTechProject
             return provinces;
         }
         // loads list of street suffixes into a List and returns it
-        public static List<string> LoadSuffixes()
+        public static HashSet<string> LoadSuffixes()
         {
-            List<string> suffixes = new List<string>();
+            HashSet<string> suffixes = new HashSet<string>();
 
             suffixes = LoadCSV("street suffixes.csv");
 
             return suffixes;
         }
         // parses raw string into its parts
-        public static void ParseAddress(string raw, List<string> cities, List<string> provinces, List<string> suffixes)
+        public static void ParseAddress(string raw, HashSet<string> cities, HashSet<string> provinces, HashSet<string> suffixes, string conString)
         {
             // counter to ensure all components have been found
             int counter = 0;
@@ -190,29 +191,37 @@ namespace OptaTechProject
             converted.Remove(province);
             counter++;
 
-            foreach (var x in converted)
+            // all components found so far
+            if (counter == 3)
             {
-                if (suffixes.Contains(Regex.Replace(String.Join(" ", converted.ToArray(), converted.IndexOf(x), 1), @"[.]", "")))
+                foreach (var x in converted)
                 {
-                    // SPECIAL CASE: multiple occurences of street suffixes i.e. BEACH RD, or xxx ST. ST. John's
-                    // check the next element after x to see if it is also a street - if not, proceed as usual, otherwise skip to the next element 
-                    if (!suffixes.Contains(Regex.Replace(String.Join(" ", converted.ToArray(), converted.IndexOf(x) + 1, 1), @"[.]", "")))
+                    if (suffixes.Contains(Regex.Replace(String.Join(" ", converted.ToArray(), converted.IndexOf(x), 1), @"[.]", "")))
                     {
-                        // street suffix found, street name is everything before
-                        streetname = String.Join(" ", converted.ToArray(), 0, converted.IndexOf(x) + 1);
-                        counter++;
-                        // and city is everything after
-                        city = String.Join(" ", converted.ToArray(), converted.IndexOf(x) + 1, converted.Count - converted.IndexOf(x) - 1);
-                        counter++;
-                        // stop iterating in case there's another street suffix in the city name
-                        break;
+                        // SPECIAL CASE: multiple occurences of street suffixes i.e. BEACH RD, or xxx ST. ST. John's
+                        // check the next element after x to see if it is also a street - if not, proceed as usual, otherwise skip to the next element 
+                        if (!suffixes.Contains(Regex.Replace(String.Join(" ", converted.ToArray(), converted.IndexOf(x) + 1, 1), @"[.]", "")))
+                        {
+                            // street suffix found, street name is everything before
+                            streetname = String.Join(" ", converted.ToArray(), 0, converted.IndexOf(x) + 1);
+                            counter++;
+                            // and city is everything after
+                            city = String.Join(" ", converted.ToArray(), converted.IndexOf(x) + 1, converted.Count - converted.IndexOf(x) - 1);
+                            counter++;
+                            // stop iterating in case there's another street suffix in the city name
+                            break;
+                        }
                     }
                 }
+                // all information extracted, print to screen
+                Console.WriteLine("{0, -15} {1, -25} {2, -40} {3, -10} {4, -15}", streetnum, streetname, city, province, postalcode);
+                DBIO.WriteComplete(conString, streetnum, streetname, city, province, postalcode);
             }
-
-            // all information extracted, print to screen
-            Console.WriteLine("{0, -15} {1, -25} {2, -40} {3, -10} {4, -15}", streetnum, streetname, city, province, postalcode);
-
+            // not enough components found (province most likely not found)
+            else
+            {
+                DBIO.WriteError(conString, raw);
+            }
 
         }
     }
