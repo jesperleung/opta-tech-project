@@ -168,7 +168,7 @@ WAY,Way
 WHARF,Wharf 
 WOOD,Wood 
 WYND,Wynd 
-N,
-S,
-E,
-W,
+"N	",NE
+"S	",NW
+"E	",SE
+"W	",SW

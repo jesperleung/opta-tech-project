@@ -17,7 +17,7 @@ namespace OptaTechProject
         * load and read XSL file with provided filename ***FILE MUST BE IN ROOT FOLDER OF PROJECT***
         * code adapted from https://coderwall.com/p/app3ya/read-excel-file-in-c
         */
-        public static void LoadXSL(string filename, List<string> cities, List<string> provinces, List<string> suffixes)
+        public static void LoadXLS(string filename, HashSet<string> cities, HashSet<string> provinces, HashSet<string> suffixes)
         {
             try
             {
@@ -77,9 +77,9 @@ namespace OptaTechProject
         }
 
         // load and read CSV file with provided filename ***FILE MUST BE IN ROOT FOLDER OF PROJECT****
-        public static List<string> LoadCSV(string filename)
+        public static HashSet<string> LoadCSV(string filename)
         {
-            List<string> loaded = new List<string>();
+            HashSet<string> loaded = new HashSet<string>();
             try
             {
                 // getting data file from root folder of project and provided filename
@@ -107,19 +107,19 @@ namespace OptaTechProject
             return loaded;
         }
         // loads list of Canadian cities from csv file into a List and returns it
-        public static List<string> LoadCities()
+        public static HashSet<string> LoadCities()
         {
             // initialize List for cities
-            List<string> cities = new List<string>();
+            HashSet<string> cities = new HashSet<string>();
 
             cities = LoadCSV("places.csv");
 
             return cities;
         }
         // loads list of Canadian provinces into a List and returns it
-        public static List<string> LoadProvinces()
+        public static HashSet<string> LoadProvinces()
         {
-            List<string> provinces = new List<string>
+            HashSet<string> provinces = new HashSet<string>
             {
                 "ON",
                 "QC",
@@ -139,16 +139,16 @@ namespace OptaTechProject
             return provinces;
         }
         // loads list of street suffixes into a List and returns it
-        public static List<string> LoadSuffixes()
+        public static HashSet<string> LoadSuffixes()
         {
-            List<string> suffixes = new List<string>();
+            HashSet<string> suffixes = new HashSet<string>();
 
             suffixes = LoadCSV("street suffixes.csv");
 
             return suffixes;
         }
         // parses raw string into its parts
-        public static void ParseAddress(string raw, List<string> cities, List<string> provinces, List<string> suffixes)
+        public static void ParseAddress(string raw, HashSet<string> cities, HashSet<string> provinces, HashSet<string> suffixes)
         {
             // initialize counter to be used to ensure all elements are gathered from raw string
             int counter;
@@ -230,19 +230,19 @@ namespace OptaTechProject
                     {
                         // get index of street suffix
                         suffixindex = converted.IndexOf(x);
-                        // suffix is at the end of the string, so street name is at least 1 element before it
+                        // CASE 1: suffix is at the end of the string, so street name is at least 1 element before it
                         if (suffixindex == (converted.Count - 1))
                         {
                             potentialstreet = converted.ElementAt(suffixindex);
                             potentialcity = "";
                             pointer = suffixindex - 1;
                             // start building street name from right to left until search reaches a #
-                            while (!numfound && !cityfound)
+                            while (!numfound && !cityfound && pointer != 0)
                             {
                                 // building string from right to left
                                 potentialstreet = converted.ElementAt(pointer) + " " + potentialstreet;
                                 pointer--;
-                                Console.WriteLine("building string backwards: " + potentialstreet);
+                                //Console.WriteLine("building string backwards: " + potentialstreet);
                                 // if next element to the left is a number, could be street number
                                 if (Utils.IsNumeric(converted.ElementAt(pointer)))
                                 {
@@ -276,7 +276,7 @@ namespace OptaTechProject
                                             if (cities.Contains(y, StringComparer.OrdinalIgnoreCase))
                                             {
                                                 potentialcity = y;
-                                                Console.WriteLine("potential city: " + potentialcity);
+                                                //Console.WriteLine("potential city: " + potentialcity);
                                             }
                                         }
                                         // last iteration of potentialcity should be the city name (longest one)
@@ -321,28 +321,30 @@ namespace OptaTechProject
                                     }
                                 }
                             }
+                            // searched through whole string and didn't find what we needed
+                            // TODO: insert into ERROR table
                         }
-                        // suffix is in the middle of the string, so street name must be somewhere in 0 to suffixindex
+                        // CASE 2: suffix is in the middle of the string, so street name must be somewhere in 0 to suffixindex
                         else
                         {
-                            potentialstreet = converted.ElementAt(suffixindex);
+                            potentialstreet = "";
                             potentialcity = "";
-                            pointer = converted.Count - 1;
+                            pointer = 0;
 
-                            // start building street from left to right, starting from suffixindex until a # is found
+                            // start building street from left to right, starting from 0 to suffixindex or until a # is found
                             while (!numfound && !cityfound)
                             {
-                                potentialstreet = converted.ElementAt(pointer) + " " + potentialstreet;
-                                pointer--;
-                                Console.WriteLine("building string backwards: " + potentialstreet);
-                                // if next element to the left is a number, could be street number
+                                potentialstreet = potentialstreet + converted.ElementAt(pointer);
+                                //Console.WriteLine("building string forwards: " + potentialstreet);
+
+                                // if next element to the right is a number, could be street number
                                 if (Utils.IsNumeric(converted.ElementAt(pointer)))
                                 {
                                     numindex = pointer;
                                     // street number is first element in string, street name must be from 1 to suffixindex, and city from suffixindex + 1 to converted.Count
                                     if (numindex == 0)
                                     {
-                                        // get all substrings from suffixindex + 1 to converted.Count
+                                        // get all substrings from 1 to converted.Count
                                         substrings = Utils.AllSubstrings(converted.GetRange(suffixindex + 1, converted.Count - suffixindex - 1).ToArray());
                                         // check every substring for a city name
                                         foreach (var y in substrings)
@@ -351,7 +353,7 @@ namespace OptaTechProject
                                             if (cities.Contains(y, StringComparer.OrdinalIgnoreCase))
                                             {
                                                 potentialcity = y;
-                                                Console.WriteLine("potential city: " + potentialcity);
+                                                //Console.WriteLine("potential city: " + potentialcity);
                                             }
                                         }
                                         // last iteration of potentialcity should be the city name (longest one)
@@ -378,14 +380,14 @@ namespace OptaTechProject
                                                 if (cities.Contains(y, StringComparer.OrdinalIgnoreCase))
                                                 {
                                                     potentialcity = y;
-                                                    Console.WriteLine("potential city: " + potentialcity);
+                                                    //Console.WriteLine("potential city: " + potentialcity);
                                                 }
                                             }
                                             // last iteration of potentialcity should be the city name (longest one)
                                             city = potentialcity;
                                             cityindex = city.Split(null).Length;
                                             streetnum = converted.ElementAt(numindex);
-                                            streetname = String.Join(" ", converted.GetRange(cityindex, suffixindex - cityindex));
+                                            streetname = String.Join(" ", converted.GetRange(cityindex, suffixindex - cityindex + 1));
                                             Console.WriteLine("city found: " + city);
                                             Console.WriteLine("street num found: " + streetnum);
                                             Console.WriteLine("street name found: " + streetname);
@@ -393,7 +395,7 @@ namespace OptaTechProject
                                             numfound = true;
 
                                         }
-                                        // street ending is in the middle, so street name is 0 to suffixindex, and city is suffixindex + 1 onwards
+                                        // street ending is in the middle, so street name is 0 to suffixindex, and city is suffixindex + 1 onwards to numindex - 1
                                         else
                                         {
                                             substrings = Utils.AllSubstrings(converted.GetRange(suffixindex + 1, converted.Count - suffixindex - 1).ToArray());
@@ -404,7 +406,7 @@ namespace OptaTechProject
                                                 if (cities.Contains(y, StringComparer.OrdinalIgnoreCase))
                                                 {
                                                     potentialcity = y;
-                                                    Console.WriteLine("potential city: " + potentialcity);
+                                                    //Console.WriteLine("potential city: " + potentialcity);
                                                 }
                                             }
                                             // last iteration of potentialcity should be the city name (longest one)
@@ -418,11 +420,11 @@ namespace OptaTechProject
                                             numfound = true;
                                         }
                                     }
-                                    // multiple elements before numindex, need to find cities
+                                    // street number and street ending in the middle, so city is numindex + 1 onwards, and street is 0 to suffixindex
                                     else
                                     {
                                         // get all substrings from 0 to index of potential street number
-                                        substrings = Utils.AllSubstrings(converted.GetRange(0, numindex).ToArray());
+                                        substrings = Utils.AllSubstrings(converted.GetRange(numindex + 1, converted.Count - 1 - numindex).ToArray());
                                         // check every substring for a city name
                                         foreach (var y in substrings)
                                         {
@@ -433,41 +435,29 @@ namespace OptaTechProject
                                                 // Console.WriteLine("potential city: " + potentialcity);
                                             }
                                         }
-                                        // found a city name that spans from 0 to numindex - 1, so everything from numindex to suffixindex is the street number and name
-                                        // .Split(null) assumes whitespace
-                                        if (potentialcity.Split(null).Length == numindex)
-                                        {
-                                            city = potentialcity;
-                                            Console.WriteLine("city found: " + city);
-                                            cityfound = true;
-                                            streetnum = converted.ElementAt(numindex);
-                                            Console.WriteLine("street num found: " + streetnum);
-                                            numfound = true;
-                                            streetname = String.Join(" ", converted.GetRange(numindex + 1, suffixindex - numindex));
-                                            Console.WriteLine("street name found: " + streetname);
-                                        }
+                                        // last iteration of potentialcity should be the city name (longest one)
+                                        city = potentialcity;
+                                        Console.WriteLine("city found: " + city);
+                                        cityfound = true;
+                                        streetnum = converted.ElementAt(numindex);
+                                        Console.WriteLine("street num found: " + streetnum);
+                                        numfound = true;
+                                        streetname = String.Join(" ", converted.GetRange(0, suffixindex));
+                                        Console.WriteLine("street name found: " + streetname);
+
                                     }
                                 }
+                                potentialstreet = potentialstreet + " ";
+                                pointer++;
                             }
                         }
                     }
                 }
             }
-            // not enough elements matched, need user input ***SHOULDN'T HAPPEN OFTEN***
+            // province and postal code could not be extracted, save in "error" database
             else
             {
-                Console.WriteLine("Address could not be parsed properly, user input required");
-                Console.WriteLine(raw);
-                Console.WriteLine("What is the street number?");
-                streetnum = Console.ReadLine();
-                Console.WriteLine("What is the street name?");
-                streetname = Console.ReadLine();
-                Console.WriteLine("What is the city?");
-                city = Console.ReadLine();
-                Console.WriteLine("What is the province?");
-                province = Console.ReadLine();
-                Console.WriteLine("What is the postal code?");
-                postalcode = Console.ReadLine();
+
 
             }
         }
