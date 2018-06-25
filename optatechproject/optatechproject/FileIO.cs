@@ -17,7 +17,7 @@ namespace OptaTechProject
         * load and read XSL file with provided filename ***FILE MUST BE IN ROOT FOLDER OF PROJECT***
         * code adapted from https://coderwall.com/p/app3ya/read-excel-file-in-c
         */
-        public static void LoadXSL(string filename, List<string> cities, List<string> provinces, List<string> suffixes)
+        public static void LoadXLS(string filename, List<string> cities, List<string> provinces, List<string> suffixes)
         {
             try
             {

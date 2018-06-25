@@ -27,7 +27,7 @@ namespace OptaTechProject
             string inputfilename = Console.ReadLine();
             // Console.WriteLine(inputfilename);
 
-            FileIO.LoadXSL(inputfilename, cities, provinces, suffixes);
+            FileIO.LoadXLS(inputfilename, cities, provinces, suffixes);
 
             // connect to database
             //ConnectToDB();
